@@ -1,11 +1,15 @@
 import { Construct } from "constructs";
-import { App, TerraformStack } from "cdktf";
+import { App, S3Backend, TerraformStack } from "cdktf";
 
 class MyStack extends TerraformStack {
   constructor(scope: Construct, name: string) {
     super(scope, name);
 
-    // define resources here
+    new S3Backend(this, {
+      bucket: "access-team-local-run-test",
+      key: "state/terraform.tfstate",
+      region: "us-east-1"
+    });   
   }
 }
 
