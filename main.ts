@@ -16,7 +16,7 @@ class MyStack extends TerraformStack {
       region: "us-east-1"
     });
 
-    new SlackProvider(this, "Slack", {
+    new SlackProvider(this, "Slack", { 
       token: config.slackToken.stringValue
     })
 
@@ -26,12 +26,12 @@ class MyStack extends TerraformStack {
       name: "second-channel",
     })
   }
-}
+} 
 
 const app = new App();
 
 new MyStack(app, "teams-pov", {
-  slackToken: new TerraformVariable(, "SLACK_TOKEN", {
+  slackToken: new TerraformVariable(,"SLACK_TOKEN", {
     type: 'string'
   })
 })
