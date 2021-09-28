@@ -6,3 +6,5 @@ cdktf.log
 *terraform.*.tfstate*
 .gen
 .terraform
+.env
+.envrc
