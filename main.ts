@@ -1,50 +1,35 @@
-import { App, S3Backend, TerraformStack, TerraformVariable } from "cdktf";
-import { Construct } from "constructs";
-import { Conversation, SlackProvider } from './.gen/providers/slack';
+import {AccessAsCode} from "./src/modules/AccessAsCode";
+import {Person} from "./src/modules/person";
+import {Team} from "./src/modules/team";
+import {Organization} from "./src/modules/organization";
 
-class MyStack extends TerraformStack {
-  constructor(scope: Construct, name: string) {
-    super(scope, name);
-
-    new S3Backend(this, {
-      bucket: "access-team-local-run-test",
-      key: "state/terraform.tfstate",
-      region: "us-east-1"
-    });   
-  }
+const person1: Person = {
+    name: "",
+    github: "",
+    slack: "",
+    pagerDuty: ""
 }
+const person2: Person = {
+    name: "",
+    github: "",
+    slack: "",
+    pagerDuty: ""
+}
+const team1Members: Array<Person> = [person1, person2]
+const team2Members: Array<Person> = []
 
-const app = new App();
-const stack = new MyStack(app, "teams-poc");
+const teams = [
+    new Team("Team 1", team1Members),
+    new Team("Team 2", team2Members)
+]
 
-const slackToken = new TerraformVariable(stack, "SLACK_TOKEN", {
-  type: 'string'
-});
+const organization = new Organization(teams);
 
-new SlackProvider(stack, "Slack", {
-  token: slackToken.stringValue
+const accessAsCode = new AccessAsCode(organization, {
+    backend: {},
+    slack: {},
+    pagerDuty: {},
+    github: {token: "", organization: ""},
 })
 
- new Conversation(stack, "demo-conversation", {
-  actionOnDestroy: "none",
-  isPrivate: false,
-  name: "first-channel",
-})
-
-
-//  new Usergroup(stack, "slack-group", {
-//   handle: "demo-handle",
-//   name: "demo-grp"
-// })
-
-// new UsergroupChannels(stack, "slack-group-channels", {
-//   usergroupId: slackGroup.id,
-//   channels: [slackChannel.id]
-// })
-
-// new UsergroupMembers(stack, "slack-group-members", {
-//   usergroupId: "C02FHH7AU2F",
-//   members: ["Yash Hiran", "yash.hiran"]
-// })
-
-app.synth();
+accessAsCode.provision();
