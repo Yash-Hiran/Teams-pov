@@ -1,7 +1,16 @@
-import {Organization} from "./organization";
-import {AccessAsCodeConfiguration} from "./AccessAsCodeConfiguration";
-import {AccessAsCodeResult} from "./AccessAsCodeResult";
+import { Organization } from "./organization";
+import { AccessAsCodeConfiguration } from "./AccessAsCodeConfiguration";
+// import { AccessAsCodeResult } from "./AccessAsCodeResult";
+import { App, S3Backend, TerraformStack } from "cdktf";
+import { Construct } from "constructs";
 
+class MyStack extends TerraformStack{
+    constructor(scope: Construct, name: string, accessAsCode: AccessAsCode) {
+        super(scope, name);
+
+        new S3Backend(this, accessAsCode.configuration.backend);
+    }
+}
 
 export class AccessAsCode {
     organization: Organization;
@@ -12,25 +21,9 @@ export class AccessAsCode {
         this.configuration = configuration;
     }
 
-    provision(): AccessAsCodeResult {
-        return new AccessAsCodeResult()
+    provision() {
+        const app = new App();
+        new MyStack(app, 'teams', this);
+        app.synth();
     }
 }
-
-//
-// class SomeClass extends TerraformStack {
-//     constructor(scope: Construct, id: string) {
-//         super(scope, id);
-//
-//         new S3Backend(this, {
-//             bucket: "access-team-local-run-test",
-//             key: "state/terraform.tfstate",
-//             region: "us-east-1"
-//         });
-//
-//         const app = new App();
-//         const stack = new MyStack(app, "teams-poc");
-//
-//         app.synth();
-//     }
-// }

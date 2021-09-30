@@ -4,16 +4,10 @@ import {Team} from "./src/modules/team";
 import {Organization} from "./src/modules/organization";
 
 const person1: Person = {
-    name: "",
-    github: "",
-    slack: "",
-    pagerDuty: ""
+    name: "Yash Hiran",
 }
 const person2: Person = {
-    name: "",
-    github: "",
-    slack: "",
-    pagerDuty: ""
+    name: "Yashi Srivastava",
 }
 const team1Members: Array<Person> = [person1, person2]
 const team2Members: Array<Person> = []
@@ -26,10 +20,11 @@ const teams = [
 const organization = new Organization(teams);
 
 const accessAsCode = new AccessAsCode(organization, {
-    backend: {},
-    slack: {},
-    pagerDuty: {},
-    github: {token: "", organization: ""},
+    backend: {
+        bucket: "access-team-local-run-test",
+        key: "state/terraform.tfstate",
+        region: "us-east-1"
+    },
 })
 
 accessAsCode.provision();
