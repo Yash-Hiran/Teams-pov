@@ -6,9 +6,11 @@ import {Organization} from "./src/modules/organization";
 const person1: Person = {
     name: "Yash Hiran",
 }
+
 const person2: Person = {
     name: "Yashi Srivastava",
 }
+
 const team1Members: Array<Person> = [person1, person2]
 const team2Members: Array<Person> = []
 
@@ -24,7 +26,7 @@ const accessAsCode = new AccessAsCode(organization, {
         bucket: "access-team-local-run-test",
         key: "state/terraform.tfstate",
         region: "us-east-1"
-    },
+    }
 })
 
 accessAsCode.provision();

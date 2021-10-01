@@ -1,8 +1,9 @@
 import { Organization } from "./organization";
 import { AccessAsCodeConfiguration } from "./AccessAsCodeConfiguration";
 // import { AccessAsCodeResult } from "./AccessAsCodeResult";
-import { App, S3Backend, TerraformStack } from "cdktf";
+import { App, S3Backend, TerraformStack, TerraformVariable } from "cdktf";
 import { Construct } from "constructs";
+import { SlackProvider } from '../../.gen/providers/slack'
 
 class MyStack extends TerraformStack{
     constructor(scope: Construct, name: string, accessAsCode: AccessAsCode) {
@@ -23,7 +24,20 @@ export class AccessAsCode {
 
     provision() {
         const app = new App();
-        new MyStack(app, 'teams', this);
+        const stack = new MyStack(app, 'teams', this);
+
+        this.inputTerraformVariables(stack)
+
         app.synth();
+    }  
+
+    inputTerraformVariables(stack: MyStack){
+        const slackToken = new TerraformVariable(stack, 'SLACK_TOKEN', {
+            type: 'string' 
+        });
+
+        new SlackProvider(stack, "slack", {
+            token: slackToken.stringValue
+        });
     }
 }

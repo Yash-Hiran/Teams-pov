@@ -1,7 +1,6 @@
 import { S3BackendProps } from "cdktf";
 
 export interface BackendConfiguration {
-
 }
 
 export interface SlackConfiguration {
@@ -16,8 +15,8 @@ export interface GithubConfiguration {
 }
 
 export interface AccessAsCodeConfiguration {
-    backend: S3BackendProps;
-    slack?: SlackConfiguration;
+    backend: S3BackendProps,
+    slack?: SlackConfiguration,
     pagerDuty?: PagerDutyConfiguration,
     github?: GithubConfiguration
 }
